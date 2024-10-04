@@ -1,5 +1,8 @@
 class Comment{
-    constructor(text, id, authorF, authorL, date, time, parentID){
+    constructor(){
+        
+    }
+    constructor(text, id, authorF, authorL, date, time){
         this.text = text;
         this.id = id;
         this.authorF = authorF;
@@ -7,7 +10,6 @@ class Comment{
         this.comments = [];
         this.date = date;
         this.time = time;
-        this.parentID = parentID;
     }
     getAuthorL(){return this.authorL;}
     setAuthorL(authorL){this.authorL=authorL;}
@@ -32,9 +34,5 @@ class Comment{
             }
         }
     }
-    getParentID(){return this.parentID;}
-    setParentID(parentID){this.parentID = parentID;}
-
-
 }
 export default Comment

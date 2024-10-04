@@ -1,4 +1,7 @@
 class Blog{
+    constructor(){
+        
+    }
     constructor(title, authorL, authorF, text, date, time, id, location, severity){
         this.title = title;
         this.authorF = authorF;
