@@ -10,4 +10,15 @@ router.get("/", async (req, res) => {
     res.send(results).status(200);
   });
 
+router.post("/", async (req, res) => {
+    try {
+      let newUser = req.body;
+      let collection = await db.collection("users");
+      let result = await collection.insertOne(newUser);
+      res.send(result).status(200);
+    } catch {
+      res.status(500).send("Error uploading user datat");
+    }
+});
+
 export default router;
