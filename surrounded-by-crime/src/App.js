@@ -8,7 +8,6 @@ import ErrorPage from './Pages/ErrorPage/ErrorPage';
 import UserPage from './Pages/UserPage/UserPage';
 import NewAccount from './Pages/newAccount/newAccount';
 import Report from './components/Report/Report';
-import ReportPreview from './components/ReportPreview/ReportPreview';
 
 function App() {
   return (
@@ -16,7 +15,7 @@ function App() {
       <NavBar></NavBar>
       <Routes>
         <Route path='/report/' element={<Report/>}/>
-        <Route path='/user/' element={<UserPage/>}/>
+        <Route path='/user' element={<UserPage/>}/>
         <Route path='/newaccount' element={<NewAccount/>}/>
         <Route path='/Login' element={<LogIn/>}/>
         <Route exact path='/' element={<HomePage/>}/>

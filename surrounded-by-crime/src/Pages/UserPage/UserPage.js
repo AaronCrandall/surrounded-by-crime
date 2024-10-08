@@ -18,27 +18,28 @@ export default function UserPage() {
     "date","time")
   var comment3 = new Comment("Oh no that sounds terrible, I also live on that street. What did they look like?",2,"Vivian","Crandall",
     "date","time")
-  var comment4 = new Comment("They were wearing a white Tshirt and had blonde hair",0,"Aaron","Crandall",
+  var comment4 = new Comment("They were wearing a white T-shirt and had blonde hair",0,"Aaron","Crandall",
     "date","time")
   blog1.addComment(comment1);
   blog1.addComment(comment2);
   comment3.addComment(comment4);
-  blog2.addComment(comment3); 
+  blog2.addComment(comment3);
+  blogs.push(blog1, blog2); 
   //blog = code to fill blog in from database, gets blogs relevant to the user based on preferences
   //user = code to get user data
   return (
     <div>
       <div className='UserInfo'>
-        <h1>{user.getNameF()} ' ' {user.getnameL()}</h1>
+        <h1>{user.getnameF()} {user.getnameL()}</h1>
       </div>
       <div className='search'>
         {/* move the searchbar here*/}
       </div>
       <div className='ReportPreviews'>
         {/*still need to test these mapping functions*/ /*make the report previews buttons to go to the report*/}
-        {blogs.map((data, index) => (
+        {blogs.map((data, index) => { return (
           <ReportPreview key={index} {...data}/>
-        ))}
+        );})}
       </div>
     </div>
   )

@@ -1,8 +1,5 @@
 class Blog{
-    constructor(){
-        
-    }
-    constructor(title, authorL, authorF, text, date, time, id, location, severity){
+    constructor(title, authorL, authorF, text, date, time, id, location, severity, authID){
         this.title = title;
         this.authorF = authorF;
         this.authorL = authorL;
@@ -13,7 +10,10 @@ class Blog{
         this.location = location;
         this.severity = severity;
         this.comments = [];
+        this.authID = authID;
     }
+    getAuthID(){return this.authID;}
+    setAuthID(authID){this.authID = authID;}
     getTitle(){return this.title;}
     setTitle(title){this.title = title;}
     getAuthorL(){return this.authorL;}
@@ -31,19 +31,18 @@ class Blog{
     getLocation(){return this.location;}
     setLocation(location){this.location=location;}
     getSeverity(){return this.severity;}
-    setSeverity(){this.severity = severity;}
+    setSeverity(severity){this.severity = severity;}
     getComments(){return this.comments;}
     setComments(comments){this.comments = comments;}
     addComment(comment){this.comments.push(comment)};
     removeComment(comment){
-        for(i = 0; i < this.comments.length; i++)
+        for(let i = 0; i < this.comments.length; i++)
         {
-            if(this.comments[i].id == comment.id){
+            if(this.comments[i].id === comment.id){
                 delete this.comments[i];
             }
         }
     }
 
 }
-
 export default Blog;

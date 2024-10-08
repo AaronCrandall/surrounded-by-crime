@@ -1,8 +1,5 @@
 class Comment{
-    constructor(){
-        
-    }
-    constructor(text, id, authorF, authorL, date, time){
+    constructor(text, id, authorF, authorL, date, time, authID){
         this.text = text;
         this.id = id;
         this.authorF = authorF;
@@ -10,7 +7,10 @@ class Comment{
         this.comments = [];
         this.date = date;
         this.time = time;
+        this.authID = authID;
     }
+    getAuthID(){return this.authID;}
+    setAuthID(authID){this.authID = authID;}
     getAuthorL(){return this.authorL;}
     setAuthorL(authorL){this.authorL=authorL;}
     getAuthorF(){return this.authorF;}
@@ -27,9 +27,9 @@ class Comment{
     setComments(comments){this.comments = comments;}
     addComment(comment){this.comments.push(comment)};
     removeComment(comment){
-        for(i = 0; i < this.comments.length; i++)
+        for(let i = 0; i < this.comments.length; i++)
         {
-            if(this.comments[i].id == comment.id){
+            if(this.comments[i].id === comment.id){
                 delete this.comments[i];
             }
         }
