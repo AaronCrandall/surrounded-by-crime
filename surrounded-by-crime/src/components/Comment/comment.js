@@ -1,16 +1,16 @@
 import React from 'react'
 import Comment from '../../CustomClass/Comment'
 
-const comment = (props) => {
-    
+const CommentShow = (props) => {
+    var comment1 = new Comment();
+    comment1 = props
     return ( 
         <div>
-            <h1>{props.getText()}</h1>
-            <h3>{props.getAuthorF()}" "{props.getAutherL()}</h3>
-            <h5>{props.getDate()} " " {props.getTime()}</h5>
-            <p>{props.getText()}</p>
+            <h3>{comment1.authorF} {comment1.autherL}</h3>
+            <h5>{comment1.date} {comment1.time}</h5>
+            <p>{comment1.text}</p>
         </div>
      );
 }
  
-export default comment;
+export default CommentShow;
