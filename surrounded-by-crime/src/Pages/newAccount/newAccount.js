@@ -21,11 +21,11 @@ export default function NewAccount() {
     async function testPost(e) {
         e.preventDefault();
         try {
-            const login = { ...userForm };
+            const registration = { ...userForm };
             const response = await fetch("http://localhost:5050/crime/", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(login)}
+            body: JSON.stringify(registration)}
         )
         } finally {
             navigate('/');
