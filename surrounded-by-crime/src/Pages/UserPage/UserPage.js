@@ -1,12 +1,10 @@
 import React, {useState} from 'react'
-import {useHistory} from 'react-router-dom'
 import ReportPreview from '../../components/ReportPreview/ReportPreview'
 import Blog from '../../CustomClass/Blog'
 import User from '../../CustomClass/User'
 
 //make a list of reports than give each report its own report preview
 export default function UserPage() {
-  const navigate = useHistory();
   const [reporting, setReporting] = useState(false);
   var user = new User("Aaron", "Crandall", 0, 123, "acranda1@uncc.edu")
   var blog1 = new Blog("Stabbing","Crandall","Aaron","Someone was stabbed today at 3:30pm outside of my house on 1st street. The suspect was wearing",
@@ -36,11 +34,6 @@ export default function UserPage() {
   function newBlog(){
     setReporting(true);
   }
-  function redirect(index){
-    var report = reporting[index];
-    var id = report.id;
-    navigate.push(`/report/${id}`);
-  }
   //blog = code to fill blog in from database, gets blogs relevant to the user based on preferences
   //user = code to get user data
   return (
@@ -55,7 +48,7 @@ export default function UserPage() {
       {!reporting && <div className='ReportPreviews'>
         {/*make the report previews buttons to go to the report*/}
         {reportArray.map((data, index) => { return (
-          <ReportPreview key={index} {...data} onClick={() => redirect(index)}/>
+          <ReportPreview key={index} {...data}/>
         );})}
       </div>}
       {reporting && 
