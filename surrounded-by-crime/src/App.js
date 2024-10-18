@@ -14,8 +14,8 @@ function App() {
     <BrowserRouter>
       <NavBar></NavBar>
       <Routes>
-        <Route path='/report/' element={<Report/>}/>
-        <Route path='/user' element={<UserPage/>}/>
+        <Route path='/report/:reportid' element={<Report/>}/>
+        <Route path='/user/:userid' element={<UserPage/>}/>
         <Route path='/newaccount' element={<NewAccount/>}/>
         <Route path='/Login' element={<LogIn/>}/>
         <Route exact path='/' element={<HomePage/>}/>

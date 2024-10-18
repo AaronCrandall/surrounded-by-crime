@@ -8,8 +8,6 @@ export default function Report(blog) {
   const [commenting, setCommenting] = useState(false);
   const [commentToDisplay, setcommentToDisplay] = useState();
   const [commentingComment, setCommentingComment] = useState(false);
-  //const [comment_new, setComments_new] = useState([]);
-  const [update, setUpdate] = useState(true);
   const user = new User("Aaron", "Crandall", 0, 123, '1@1.com', 10);
   var blog1 = new Blog("Stabbing","Crandall","Aaron","Someone was stabbed today at 3:30pm outside of my house on 1st street. The suspect was wearing",
     "oct 3 2024","3:30pm", 0, "1st street",4)
@@ -21,13 +19,19 @@ export default function Report(blog) {
     "date","time")
   var comment4 = new Comment("This comment should be third",3,"Aaron","Crandall",
     "date","time")
+  var comments1 = [];
   comment3.addComment(comment4);
   comment1.addComment(comment3);
   blog1.addComment(comment1);
   blog1.addComment(comment2);
-  var comments1 = [];
+  const [comment_new, setComments_new] = useState([]);
   //var blog1 = new Blog();
   //blog1 = blog;
+  function setsupdisplay(data){
+    commentDisplay(data);
+    console.log(comments1);
+    setComments_new([comments1]);
+  }
   function commentDisplay(data){
     if(data != null)
     {
@@ -38,6 +42,7 @@ export default function Report(blog) {
         }
       }
     }
+    console.log(comments1);
   }
   function displayWhileCommenting(index){
     setCommentingComment(true);
@@ -56,15 +61,15 @@ export default function Report(blog) {
     formData.append("authID", user.id);
     var comment_add = new Comment(formData.get("text"),4,user.nameF,user.nameL,fulldate,currentTime,user.id);
     owner.addComment(comment_add);
-    commentDisplay(blog1);
+    setsupdisplay(blog1);
     console.log(owner);
-    setUpdate(false);
-    setUpdate(true);
+    console.log(comment_add);
     //update component
     //post form to database
     setCommentingComment(false);
     setCommenting(false);
   }
+  //setsupdisplay(blog1.comments);
   return (
     <div>
       <div className='blogstuff'>
@@ -89,10 +94,9 @@ export default function Report(blog) {
           </form>
           <button onClick={() => (makeComment(blog1))}>Submit</button>
       </div>}
-      {!commenting && !commentingComment && update &&
+      {!commenting && !commentingComment &&
       <div className='comments'>
-        {commentDisplay(blog1.comments)}
-        {comments1.map((data, index) => {
+        {comment_new.map((data, index) => {
           return(
             <div className='individual_comment'>
               <CommentShow key={index} {...data}/>
