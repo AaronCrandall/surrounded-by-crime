@@ -1,4 +1,5 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
+import { useNavigate } from 'react-router-dom';
 import ReportPreview from '../../components/ReportPreview/ReportPreview'
 import Blog from '../../CustomClass/Blog'
 import User from '../../CustomClass/User'
@@ -7,11 +8,33 @@ import User from '../../CustomClass/User'
 export default function UserPage() {
   const [reporting, setReporting] = useState(false);
   var user = new User("Aaron", "Crandall", 0, 123, "acranda1@uncc.edu")
-  var blog1 = new Blog("Stabbing","Crandall","Aaron","Someone was stabbed today at 3:30pm outside of my house on 1st street. The suspect was wearing",
-    "oct 3 2024","3:30pm", 0, "1st street",4)
-  var blog2 = new Blog("Robbery","Crandall","Aaron","Someone Robbed my house on 1st street around 3:15pm. The suspect was wearing",
-    "oct 3 2024","3:15pm", 1, "1st street",3)
-  const [reportArray, setReportArray] = useState([blog1, blog2]);
+  // const [reportArray, setReportArray] = useState([blog1, blog2]);
+  const [reportArray, setReportArray] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function getBlogs() {
+      const response = await fetch(`http://localhost:5050/crime/all-blogs`);
+      if (!response.ok) {
+        const message = `Error: ${response.statusText}`;
+        console.error(message);
+        return;
+      }
+      const blogs = await response.json();
+      setReportArray(blogs);
+    }
+    getBlogs();
+    return;
+  }, [reportArray.length]);
+  
+  async function uploadBlog(blog) {
+    const newBlog = blog;
+    const response = await fetch("http://localhost:5050/crime/new-blog", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(blog)}
+    )
+  };
   
   function makeReport(){
     var location = 0; //need to find out how to get location
@@ -26,16 +49,20 @@ export default function UserPage() {
     formData.append("time", currentTime);
     formData.append("authID", user.id);
     formData.append("location", location)
-    var blog_new = new Blog(formData.get("title"),user.nameF,user.nameF,formData.get("text"),fulldate,currentTime,2,location,formData.get("severity"),user.id);
-    //push to database
+    var blog_new = new Blog(formData.get("title"),user.nameL,user.nameF,formData.get("text"),fulldate,currentTime,2,location,formData.get("severity"),user.id);
+    //push to database\
+    uploadBlog(blog_new);
     setReportArray([...reportArray, blog_new]);
     setReporting(false);
   }
+
   function newBlog(){
     setReporting(true);
   }
+
   //blog = code to fill blog in from database, gets blogs relevant to the user based on preferences
   //user = code to get user data
+
   return (
     <div>
       <div className='UserInfo'>

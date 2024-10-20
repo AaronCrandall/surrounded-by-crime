@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
+import { useParams } from "react-router-dom";
 import CommentShow from '../Comment/comment'
 import Blog from '../../CustomClass/Blog'
 import Comment from '../../CustomClass/Comment'
 import User from '../../CustomClass/User'
 
 export default function Report(blog) {
+  const params = useParams();
   const [commenting, setCommenting] = useState(false);
   const [commentToDisplay, setcommentToDisplay] = useState();
   const [commentingComment, setCommentingComment] = useState(false);
@@ -20,6 +22,7 @@ export default function Report(blog) {
   var comment4 = new Comment("This comment should be third",3,"Aaron","Crandall",
     "date","time")
   var comments1 = [];
+
   comment3.addComment(comment4);
   comment1.addComment(comment3);
   blog1.addComment(comment1);
@@ -27,11 +30,13 @@ export default function Report(blog) {
   const [comment_new, setComments_new] = useState([]);
   //var blog1 = new Blog();
   //blog1 = blog;
+
   function setsupdisplay(data){
     commentDisplay(data);
     console.log(comments1);
     setComments_new([comments1]);
   }
+
   function commentDisplay(data){
     if(data != null)
     {
@@ -44,10 +49,12 @@ export default function Report(blog) {
     }
     console.log(comments1);
   }
+
   function displayWhileCommenting(index){
     setCommentingComment(true);
     setcommentToDisplay(comments1[index]);
   }
+
   function makeComment(owner){
     const date = new Date();
     let fulldate = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
@@ -69,6 +76,7 @@ export default function Report(blog) {
     setCommentingComment(false);
     setCommenting(false);
   }
+
   //setsupdisplay(blog1.comments);
   return (
     <div>
