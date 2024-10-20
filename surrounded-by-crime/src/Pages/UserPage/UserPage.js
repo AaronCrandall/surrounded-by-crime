@@ -12,6 +12,7 @@ export default function UserPage() {
   const [reportArray, setReportArray] = useState([]);
   const navigate = useNavigate();
 
+  // Get all blogs
   useEffect(() => {
     async function getBlogs() {
       const response = await fetch(`http://localhost:5050/crime/all-blogs`);
@@ -35,7 +36,7 @@ export default function UserPage() {
     body: JSON.stringify(blog)}
     )
   };
-  
+
   function makeReport(){
     var location = 0; //need to find out how to get location
     const date = new Date();

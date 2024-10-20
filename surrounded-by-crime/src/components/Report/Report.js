@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams } from "react-router-dom";
 import CommentShow from '../Comment/comment'
 import Blog from '../../CustomClass/Blog'
@@ -10,9 +10,26 @@ export default function Report(blog) {
   const [commenting, setCommenting] = useState(false);
   const [commentToDisplay, setcommentToDisplay] = useState();
   const [commentingComment, setCommentingComment] = useState(false);
-  const user = new User("Aaron", "Crandall", 0, 123, '1@1.com', 10);
-  var blog1 = new Blog("Stabbing","Crandall","Aaron","Someone was stabbed today at 3:30pm outside of my house on 1st street. The suspect was wearing",
-    "oct 3 2024","3:30pm", 0, "1st street",4)
+  const user = new User("Aaron", "Crandall", 0, 123, 'acranda1@uncc.edu', 10);
+  const [currentBlog, setCurrentBlog] = useState(new Blog());
+
+  useEffect(() => {
+    async function getBlog() {
+      const blogId = params.reportid.toString();
+      const response = await fetch(`http://localhost:5050/crime/blog/${blogId}`);
+      if (!response.ok) {
+        const message = "Error: " + response.statusText;
+        return;
+      }
+      const blogData = await response.json();
+      let blog1 = new Blog(blogData.title, blogData.authorL, blogData.authorF, blogData.text, blogData.date, blogData.time, blogData.id, blogData.location, blogData.severity, 0);
+      blog1.objectID = blogData._id;
+      setCurrentBlog(blog1);
+    }
+    getBlog();
+    return;
+  }, [params.reportid]);
+  
   var comment1 = new Comment("This comment should be first",0,"Kelyn","Crandall",
     "date","time")
   var comment2 = new Comment("This comment should be last",1,"Vivian","Crandall",
@@ -25,8 +42,8 @@ export default function Report(blog) {
 
   comment3.addComment(comment4);
   comment1.addComment(comment3);
-  blog1.addComment(comment1);
-  blog1.addComment(comment2);
+  // blog1.addComment(comment1);
+  // blog1.addComment(comment2);
   const [comment_new, setComments_new] = useState([]);
   //var blog1 = new Blog();
   //blog1 = blog;
@@ -55,24 +72,44 @@ export default function Report(blog) {
     setcommentToDisplay(comments1[index]);
   }
 
+  async function updateComments(blog) {
+    let response;
+    try {
+      response = await fetch(`http://localhost:5050/crime/new-comment`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(blog),
+      });
+    } catch(error) {
+      console.error("Error updating comments");
+    }
+  }
+
   function makeComment(owner){
     const date = new Date();
     let fulldate = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
     let currentTime = date.toLocaleTimeString();
     let myForm = document.getElementById("myForm")
     let formData = new FormData(myForm);
+
     formData.append("authorF", user.nameF);
     formData.append("authorL", user.nameL);
     formData.append("date", fulldate);
     formData.append("time", currentTime);
     formData.append("authID", user.id);
+
     var comment_add = new Comment(formData.get("text"),4,user.nameF,user.nameL,fulldate,currentTime,user.id);
     owner.addComment(comment_add);
-    setsupdisplay(blog1);
+    setsupdisplay(currentBlog);
     console.log(owner);
     console.log(comment_add);
     //update component
     //post form to database
+
+    updateComments(owner);
+
     setCommentingComment(false);
     setCommenting(false);
   }
@@ -81,12 +118,12 @@ export default function Report(blog) {
   return (
     <div>
       <div className='blogstuff'>
-        <h1>{blog1.title}</h1>
-        <h3>{blog1.authorF} {blog1.authorL}</h3>
-        <h5>{blog1.date} {blog1.time}</h5>
-        <h5>{blog1.location}</h5>
-        <h6>{blog1.severity}</h6>
-        <p>{blog1.text}</p>
+        <h1>{currentBlog.title}</h1>
+        <h3>{currentBlog.authorF} {currentBlog.authorL}</h3>
+        <h5>{currentBlog.date} {currentBlog.time}</h5>
+        <h5>{currentBlog.location}</h5>
+        <h6>{currentBlog.severity}</h6>
+        <p>{currentBlog.text}</p>
       </div>
       {!commenting && !commentingComment &&
       <div>
@@ -100,7 +137,7 @@ export default function Report(blog) {
               <input type="text" name="text" id="text" placeholder="Comment" required></input>
             </div>
           </form>
-          <button onClick={() => (makeComment(blog1))}>Submit</button>
+          <button onClick={() => (makeComment(currentBlog))}>Submit</button>
       </div>}
       {!commenting && !commentingComment &&
       <div className='comments'>

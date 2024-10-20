@@ -11,6 +11,7 @@ class Blog{
         this.severity = severity;
         this.comments = [];
         this.authID = authID;
+        this.objectID = "";
     }
     getAuthID(){return this.authID;}
     setAuthID(authID){this.authID = authID;}
