@@ -33,22 +33,57 @@ export default function Report(blog) {
     }
   }
   return (
-    <div>
-      <div className='blogstuff'>
-        <h1>{blog1.title}</h1>
-        <h3>{blog1.authorF} {blog1.authorL}</h3>
-        <h5>{blog1.date} {blog1.time}</h5>
-        <h6>{blog1.severity}</h6>
-        <p>{blog1.text}</p>
-      </div>
-      {/*not sure if this mapping is correct, can troubleshoot it later, still need to loop through all possible comment trees*/}
-      <div className='comments'>
+    <div class="report">
+
+      <div class='container'>
+        <div class="post">
+          <h1>{blog1.title}</h1>
+          <div class="post__user">
+            <strong class="post__username">{blog1.authorF} {blog1.authorL}</strong>
+            <span class="post__date"> {blog1.date} {blog1.time}</span>
+            <h6>Severity: {blog1.severity}</h6>
+           </div>
+          <div class="post__body">{blog1.text}</div>
+          <form>
+            <button action="/" class='commentButton'>Add a Comment</button>
+          </form>
+        </div>
+
+            {/*not sure if this mapping is correct, can troubleshoot it later, still need to loop through all possible comment trees*/}
+        {/*<div>
         {commentDisplay(blog1.comments)}
         {comments1.map((data, index) => {
           return(
             <CommentShow key={index} {...data}/>
           )
         })}
+      </div>*/}
+
+      <div>
+        {commentDisplay(blog1.comments)}
+        {comments1.map(comment => {
+          return(
+              <div class="dialogbox">
+                <div class="body">
+                  <span class="tip tip-up"></span>
+                  <div class="message">
+                    <strong class="name">{comment.authorF} {comment.authorL}</strong>
+                    <span class="post__date"> {comment.date} {comment.time}</span>
+                    <div>
+                      {comment.text}
+                    </div>
+                    <div class="a">
+                    <form>
+                    <button action="/" class='replyButton'>Reply</button>
+                  </form>
+                  </div>
+                  </div>
+                </div>
+              </div>
+          )
+        })}
+      </div>
+
       </div>
     </div>
   )
