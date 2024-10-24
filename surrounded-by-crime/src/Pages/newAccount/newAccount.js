@@ -18,7 +18,18 @@ export default function NewAccount() {
         setUserForm(userForm);
     }
 
-    async function testPost(e) {
+    async function testingSession() {
+        const response = await fetch(`http://localhost:5050/crime/`);
+        if (!response.ok) {
+            const message = `An error occurred: ${response.statusText}`;
+            console.error(message);
+            return;
+        }
+    }
+
+    testingSession();
+
+    async function registerUser(e) {
         e.preventDefault();
         try {
             const registration = { ...userForm };
@@ -35,7 +46,7 @@ export default function NewAccount() {
   return (
     <main>
     <h1 class="h1">Sign Up: </h1>
-    <form className="text" onSubmit={testPost}>
+    <form className="text" onSubmit={registerUser}>
 
     <div className="inputBox">
             <input type="text" name="firstName" id="firstName" placeholder="First Name" required onChange={(e) => updateUserForm({firstName: e.target.value})}></input>

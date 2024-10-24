@@ -16,7 +16,7 @@ export default function ReportPreview(prop) {
       <h4>{blog.date} {blog.time}</h4>
       <h5>{blog.location}</h5>
       <h6>{blog.severity}</h6>
-      <button onClick={()=> redirect(blog.id)}>Go To Report</button>
+      <button onClick={()=> redirect(blog._id)}>Go To Report</button>
     </div>
   )
 }
