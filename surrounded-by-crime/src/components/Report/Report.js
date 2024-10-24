@@ -116,15 +116,18 @@ export default function Report(blog) {
 
   //setsupdisplay(blog1.comments);
   return (
-    <div>
-      <div className='blogstuff'>
-        <h1>{currentBlog.title}</h1>
-        <h3>{currentBlog.authorF} {currentBlog.authorL}</h3>
-        <h5>{currentBlog.date} {currentBlog.time}</h5>
-        <h5>{currentBlog.location}</h5>
-        <h6>{currentBlog.severity}</h6>
-        <p>{currentBlog.text}</p>
-      </div>
+    <div class='report'>
+      <div class='container'>
+        <div class="post">
+          <h1>{blog1.title}</h1>
+          <div class="post__user">
+            <strong class="post__username">{blog1.authorF} {blog1.authorL}</strong>
+            <span class="post__date"> {blog1.date} {blog1.time}</span>
+            <h6>Severity: {blog1.severity}</h6>
+           </div>
+          <div class="post__body">{blog1.text}</div>
+        </div>
+        </div>
       {!commenting && !commentingComment &&
       <div>
         <button onClick={() => setCommenting(true)}>New Comment</button>

@@ -6,7 +6,9 @@ const HomePage = () => (
    <body>
       <main>
          <div class="row">
-            <div class="column left"> LEFT COLUMN</div>
+            <div class="column left container-content2"> 
+            <img src='https://cdn-icons-png.flaticon.com/512/7902/7902313.png' alt="Girl in a jacket" width="500" height="600"></img>
+               </div>
             <div class="column middle">
             <div className='container-content'>
             <h1>
@@ -24,7 +26,10 @@ const HomePage = () => (
             </p>
          </div>
             </div>
-            <div class="column right"> RIGHT COLUMN</div>
+            <div class="column right container-content">
+            <img src='https://pngimg.com/d/thief_PNG47.png' alt="Girl in a jacket" width="500" height="600"></img>
+
+            </div>
          </div>
 
       </main>
