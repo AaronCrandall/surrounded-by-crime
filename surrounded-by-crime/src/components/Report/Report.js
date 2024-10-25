@@ -6,7 +6,11 @@ import Comment from '../../CustomClass/Comment'
 import User from '../../CustomClass/User'
 
 export default function Report(blog) {
+  var comments1 = [];
+
+  const history = window.history;
   const params = useParams();
+  const [hookforcommments, setHookForComments] = useState([]);
   const [commenting, setCommenting] = useState(false);
   const [commentToDisplay, setcommentToDisplay] = useState();
   const [commentingComment, setCommentingComment] = useState(false);
@@ -22,49 +26,32 @@ export default function Report(blog) {
         return;
       }
       const blogData = await response.json();
-      let blog1 = new Blog(blogData.title, blogData.authorL, blogData.authorF, blogData.text, blogData.date, blogData.time, blogData.id, blogData.location, blogData.severity, 0);
-      blog1.objectID = blogData._id;
-      setCurrentBlog(blog1);
+      let new_blog = new Blog(blogData.title, blogData.authorL, blogData.authorF, blogData.text, blogData.date, blogData.time, blogData.id, blogData.location, blogData.severity, 0);
+      new_blog.objectID = blogData._id;
+      new_blog.comments = blogData.comments;
+      setCurrentBlog(new_blog);
+      comments1 = [];
+      commentOrdering(new_blog.comments);
+      setHookForComments(comments1);
     }
     getBlog();
     return;
   }, [params.reportid]);
-  
-  var comment1 = new Comment("This comment should be first",0,"Kelyn","Crandall",
-    "date","time")
-  var comment2 = new Comment("This comment should be last",1,"Vivian","Crandall",
-    "date","time")
-  var comment3 = new Comment("This comment should be second",2,"Vivian","Crandall",
-    "date","time")
-  var comment4 = new Comment("This comment should be third",3,"Aaron","Crandall",
-    "date","time")
-  var comments1 = [];
-
-  comment3.addComment(comment4);
-  comment1.addComment(comment3);
-  // blog1.addComment(comment1);
-  // blog1.addComment(comment2);
-  const [comment_new, setComments_new] = useState([]);
-  //var blog1 = new Blog();
-  //blog1 = blog;
 
   function setsupdisplay(data){
-    commentDisplay(data);
-    console.log(comments1);
-    setComments_new([comments1]);
+    
   }
 
-  function commentDisplay(data){
+  function commentOrdering(data){
     if(data != null)
     {
       for(var i = 0; i < data.length; i++){
         comments1.push(data[i]);
         if(data[i].comments != null){
-          commentDisplay(data[i].comments);
+          commentOrdering(data[i].comments);
         }
       }
     }
-    console.log(comments1);
   }
 
   function displayWhileCommenting(index){
@@ -102,29 +89,26 @@ export default function Report(blog) {
 
     var comment_add = new Comment(formData.get("text"),4,user.nameF,user.nameL,fulldate,currentTime,user.id);
     owner.addComment(comment_add);
-    setsupdisplay(currentBlog);
-    console.log(owner);
-    console.log(comment_add);
-    //update component
-    //post form to database
-
     updateComments(owner);
-
-    setCommentingComment(false);
+    setCommentingComment(false); //might not need this and the next line??
     setCommenting(false);
+    history.go();
   }
 
   //setsupdisplay(blog1.comments);
   return (
-    <div>
-      <div className='blogstuff'>
-        <h1>{currentBlog.title}</h1>
-        <h3>{currentBlog.authorF} {currentBlog.authorL}</h3>
-        <h5>{currentBlog.date} {currentBlog.time}</h5>
-        <h5>{currentBlog.location}</h5>
-        <h6>{currentBlog.severity}</h6>
-        <p>{currentBlog.text}</p>
-      </div>
+    <div class='report'>
+      <div class='container'>
+        <div class="post">
+          <h1>{currentBlog.title}</h1>
+          <div class="post__user">
+            <strong class="post__username">{currentBlog.authorF} {currentBlog.authorL}</strong>
+            <span class="post__date"> {currentBlog.date} {currentBlog.time}</span>
+            <h6>Severity: {currentBlog.severity}</h6>
+           </div>
+          <div class="post__body">{currentBlog.text}</div>
+        </div>
+        </div>
       {!commenting && !commentingComment &&
       <div>
         <button onClick={() => setCommenting(true)}>New Comment</button>
@@ -141,7 +125,7 @@ export default function Report(blog) {
       </div>}
       {!commenting && !commentingComment &&
       <div className='comments'>
-        {comment_new.map((data, index) => {
+        {hookforcommments.map((data, index) => {
           return(
             <div className='individual_comment'>
               <CommentShow key={index} {...data}/>

@@ -127,8 +127,18 @@ main .container-content h2{
 
 main .container-content img{
   padding-top: 10px;
-  height: 300px;
-  width: 350px;
+  height: auto;
+  width: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 25px;
+}
+
+main .container-content2 img{
+  padding-top: 100px;
+  height: auto;
+  width: auto;
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -274,15 +284,6 @@ font-size: 17px;
   height: 40px;
 }
 
-input[type="submit"]{
-  background-color: #352f44;
-  color: #dbd8e3;
-  font-size: 1.25rem;
-  font-weight: bold;
-  width: 85%;
-  height: 40px;
-}
-
 input[type="submit"]:hover{
   cursor: pointer;
 }
@@ -299,7 +300,7 @@ input[type="submit"]:hover{
 
 .inputBox input[type="text"]{
 
-  border: 2px solid #2a2438;
+border: 2px solid #2a2438;
 width: 25%;
 margin-bottom: 3px;
 background-color: #dbd8e3;
@@ -318,4 +319,119 @@ font-size: 17px;
 
 .middle {
   width: 50%;
+}
+
+/*REPORT PAGE*/
+.container {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 10px;
+}
+
+.post {
+  width: 80%;
+  height: auto;
+  margin: 20px auto;
+  padding-top: 5px;
+  padding-bottom: 30px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: lightgray;
+  color: black;
+  border-radius: 3px;
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.4);
+}
+
+.post__username {
+  margin: 5px 0 20px 0;
+}
+
+.post h1 {
+  margin: 5px 0;
+}
+
+.post__body {
+  margin: 10px 0;
+}
+
+.post__date {
+  color: grey;
+}
+
+.commentButton{
+  float: right;
+  border-radius: 3px;
+  color: black;
+  background-color: white;
+  border: 2px solid black;
+  padding: 3px;
+  transition-duration: 0.4s;
+}
+
+.commentButton:hover {
+  background-color: rgba(255, 230, 0, 0.937);
+  color: black;
+  cursor: pointer;
+  border: 2px solid black;
+}
+
+.tip {
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  background: transparent;
+  border: 10px solid #ccc;
+}
+
+.tip-up {
+  top: -25px; /* Same as body margin top + border */
+  right: 10px;
+  border-right-color: transparent;
+  border-left-color: transparent;
+  border-top-color: transparent;
+}
+
+.dialogbox .body {
+  position: relative;
+  max-width: 300px;
+  height: auto;
+  margin: 20px 10px;
+  padding: 5px;
+  background-color: #DADADA;
+  border-radius: 3px;
+  border: 5px solid #ccc;
+}
+
+.body .message {
+  min-height: 30px;
+  border-radius: 3px;
+  font-family: Arial;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #797979;
+}
+
+.body .name {
+  color: black;
+}
+
+.replyButton{
+  border-radius: 3px;
+  color: black;
+  background-color: white;
+  border: 2px solid black;
+  padding: 3px;
+  transition-duration: 0.4s;
+}
+
+.replyButton:hover {
+  background-color: rgba(255, 230, 0, 0.937);
+  color: black;
+  cursor: pointer;
+  border: 2px solid black;
+}
+
+.a {
+  text-align: right; 
 }
