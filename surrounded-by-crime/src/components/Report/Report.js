@@ -30,8 +30,8 @@ export default function Report(blog) {
       new_blog.objectID = blogData._id;
       new_blog.comments = blogData.comments;
       setCurrentBlog(new_blog);
-      console.log(new_blog);
-      commentOrdering(new_blog.comments)
+      comments1 = [];
+      commentOrdering(new_blog.comments);
       setHookForComments(comments1);
     }
     getBlog();
