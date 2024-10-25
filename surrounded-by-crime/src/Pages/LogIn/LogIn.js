@@ -23,10 +23,13 @@ export default function LogIn() {
             const login = { ...loginForm };
             const response = await fetch("http://localhost:5050/crime/login-user", {
             method: "POST",
+            credentials: 'include',
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(login)}
+            body: JSON.stringify(login)}, {credentials: "include"}
         )
-        } 
+        } catch(err) {
+            console.log(err);
+        }
         finally {
             navigate('/');
         }

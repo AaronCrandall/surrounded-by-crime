@@ -52,8 +52,9 @@ router.post("/login-user", async (req, res) => {
     if (loginInfo.password === result.password) {
       req.session.user = result._id;
       req.session.username = result.firstName;
+      console.log(req.session);
       req.session.save();
-      res.status(200).send();
+      res.send("Login successful").status(200);
     }
     else {
       res.status(403).send("Incorrect login info");
