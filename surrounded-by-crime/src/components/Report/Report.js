@@ -28,7 +28,9 @@ export default function Report(blog) {
       const blogData = await response.json();
       let new_blog = new Blog(blogData.title, blogData.authorL, blogData.authorF, blogData.text, blogData.date, blogData.time, blogData.id, blogData.location, blogData.severity, 0);
       new_blog.objectID = blogData._id;
+      new_blog.comments = blogData.comments;
       setCurrentBlog(new_blog);
+      console.log(new_blog);
       commentOrdering(new_blog.comments)
       setHookForComments(comments1);
     }
