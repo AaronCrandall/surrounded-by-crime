@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from "react-router-dom";
 import CommentShow from '../Comment/comment'
+import ObjectID from 'bson-objectid';
 import Blog from '../../CustomClass/Blog'
 import Comment from '../../CustomClass/Comment'
 import User from '../../CustomClass/User'
@@ -12,6 +13,7 @@ export default function Report(blog) {
   const params = useParams();
   const [hookforcommments, setHookForComments] = useState([]);
   const [commenting, setCommenting] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(null);
   const [commentToDisplay, setcommentToDisplay] = useState();
   const [commentingComment, setCommentingComment] = useState(false);
   const user = new User("Aaron", "Crandall", 0, 123, 'acranda1@uncc.edu', 10);
@@ -55,6 +57,7 @@ export default function Report(blog) {
   }
 
   function displayWhileCommenting(index){
+    setCurrentIndex(index);
     setCommentingComment(true);
     setcommentToDisplay(comments1[index]);
   }
@@ -88,11 +91,23 @@ export default function Report(blog) {
     formData.append("authID", user.id);
 
     var comment_add = new Comment(formData.get("text"),4,user.nameF,user.nameL,fulldate,currentTime,user.id);
-    owner.addComment(comment_add);
-    updateComments(owner);
-    setCommentingComment(false); //might not need this and the next line??
-    setCommenting(false);
-    history.go();
+
+    if (currentIndex !== null) {
+      let commentToUpdate = hookforcommments[currentIndex];
+      commentToUpdate.comments.push(comment_add);
+      hookforcommments[currentIndex] = commentToUpdate;
+      setHookForComments(hookforcommments);
+      updateComments(currentBlog);
+      setCurrentIndex(null);
+      setCommentingComment(false);
+      setCommenting(false);
+    } else {
+      owner.addComment(comment_add);
+      updateComments(owner);
+      setCommentingComment(false); //might not need this and the next line??
+      setCommenting(false);
+      history.go();
+    }
   }
 
   //setsupdisplay(blog1.comments);

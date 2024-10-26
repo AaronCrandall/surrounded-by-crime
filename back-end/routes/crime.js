@@ -1,5 +1,6 @@
 import express from "express";
 import db from "../db/connection.js";
+import jwt from 'jsonwebtoken';
 import { ObjectId } from "mongodb";
 
 const router = express.Router();
@@ -19,36 +20,32 @@ res.send(results).status(200);
 
 // Get a specific blog
 router.get("/blog/:id", async (req, res) => {
-let collection = await db.collection("blogs");
-let blogId = {_id: new ObjectId(req.params.id)};
-let result = await collection.findOne(blogId);
+  let collection = await db.collection("blogs");
+  let blogId = {_id: new ObjectId(req.params.id)};
+  let result = await collection.findOne(blogId);
 
-if (!result) {
-  res.send("Blog not found").status(404);
-}
-else {
-  res.send(result).status(200);
-}
-});
+  if (!result) {
+    res.send("Blog not found").status(404);
+  }
+  else {
+    res.send(result).status(200);
+  }
+  });
 
 // Register new user
 router.post("/", async (req, res) => {
   try {
-    let newUser = req.body;
+    let newUser = {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      password: req.body.password
+    };
     let collection = await db.collection("users");
-    let result = await collection.findOne({email: loginInfo.email});
-    if (loginInfo.password === result.password) {
-      req.session.user = result._id;
-      req.session.username = result.firstName;
-      console.log(req.session);
-      req.session.save();
-      res.send("Login successful").status(200);
-    }
-    else {
-      res.status(403).send("Incorrect login info");
-    }
+    let result = await collection.insertOne(newUser);
+    res.send(result).status(204);
   } catch {
-    res.status(500).send("Error uploading user datat");
+    res.status(500).send("Error uploading user data");
   }
 });
 
@@ -59,10 +56,14 @@ try {
   let collection = await db.collection("users");
   let result = await collection.findOne({email: loginInfo.email});
   if (loginInfo.password === result.password) {
-    req.session.user = result._id;
-    req.session.username = result.firstName;
-    req.session.save();
-    res.status(200).send();
+    const jwtSecret = process.env.JWT_SECRET;
+    let jwtData = {
+      user: result._id,
+      userName: result.firstName
+    }
+    const token = jwt.sign(jwtData, jwtSecret);
+
+    res.status(200).json({message: "Login successful", token});
   }
   else {
     res.status(403).send("Incorrect login info");
@@ -71,6 +72,25 @@ try {
   res.status(500).send("Error uploading user datat");
 }
 });
+
+//Authenticate user
+router.post("/auth-user", async (req, res) => {
+  const jwtSecret = process.env.JWT_SECRET;
+  const token = req.headers['jwt-token']
+  try {
+    const decoded = jwt.verify(token, jwtSecret);
+    if (decoded) {
+      return res.status(200).json({
+        user: decoded.user,
+        userName: decoded.userName
+      });
+    } else {
+      return res.status(401).json({message: 'Error authenticating'});
+    }
+  } catch (error) {
+    return res.status(401).json({message: 'Error'});
+  }
+})
 
 // Upload a new blog
 router.post("/new-blog", async (req, res) => {
