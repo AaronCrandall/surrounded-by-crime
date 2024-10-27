@@ -1,30 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom';
+import getUserData from '../../authUser';
 
 export default function NavBar(){
-  const [userData, setUserData] = useState([]);
+  const [userData, setUserData] = useState({
+    user: "",
+    userFirst: "",
+    userLast: ""
+  });
 
   useEffect(() => {
-    async function getUserData() {
-      if (localStorage.getItem('jwt-token') !== null) {
-        const token = localStorage.getItem('jwt-token');
-        await fetch("http://localhost:5050/crime/auth-user", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                'jwt-token': token
-            }
-        })
-        .then((res) => res.json())
-        .then((data) => {
-            setUserData([data.user, data.userName]);
-        })
-        console.log(userData);
+    const authData = getUserData();
+    authData.then(function(result) {
+      if (result) {
+        setUserData({
+          user: result.user, userFirst: result.userFirst, userLast: result.userLast
+        });
       }
-    }
-    getUserData();
+    });
     return;
-  }, [userData.length]);
+  }, [Object.keys(userData).length]);
 
   async function logOutUser() {
     localStorage.removeItem('jwt-token');
@@ -37,14 +32,16 @@ export default function NavBar(){
       <div className='header'>
         <a className="logo"><Link to="/"><img src='logoTransparent.png' alt="logo"></img></Link></a>
         <div className='header-right'>
-          { userData.length > 0 && 
-          <a><Link to= '/user/{user.id}'>{userData[1]}'s page</Link> </a>
+          { userData.user && 
+          <a><Link to= '/user/{user.id}'>{userData.userFirst}'s page</Link> </a>
           }
+          { !userData.user && 
           <a><Link to="/newaccount">Create New Account</Link></a>
-          { userData.length === 0 && 
+          }
+          { !userData.user && 
           <a><Link to="login">Login Here</Link></a>
           }
-          { userData.length > 0 && 
+          { userData.user && 
           <button onClick={() => (logOutUser())}>Log Out</button>
           }
           <div className="search-container">

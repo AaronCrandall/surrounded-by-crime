@@ -59,7 +59,8 @@ try {
     const jwtSecret = process.env.JWT_SECRET;
     let jwtData = {
       user: result._id,
-      userName: result.firstName
+      userFirst: result.firstName,
+      userLast: result.lastName
     }
     const token = jwt.sign(jwtData, jwtSecret);
 
@@ -82,7 +83,8 @@ router.post("/auth-user", async (req, res) => {
     if (decoded) {
       return res.status(200).json({
         user: decoded.user,
-        userName: decoded.userName
+        userFirst: decoded.userFirst,
+        userLast: decoded.userLast
       });
     } else {
       return res.status(401).json({message: 'Error authenticating'});

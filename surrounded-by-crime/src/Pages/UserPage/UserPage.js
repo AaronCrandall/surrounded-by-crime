@@ -3,13 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import ReportPreview from '../../components/ReportPreview/ReportPreview'
 import Blog from '../../CustomClass/Blog'
 import User from '../../CustomClass/User'
+import getUserData from '../../authUser';
 
 //make a list of reports than give each report its own report preview
 export default function UserPage() {
   const [reporting, setReporting] = useState(false);
-  var user = new User("Aaron", "Crandall", 0, 123, "acranda1@uncc.edu")
+  // var user = new User("Aaron", "Crandall", 0, 123, "acranda1@uncc.edu")
   // const [reportArray, setReportArray] = useState([blog1, blog2]);
   const [reportArray, setReportArray] = useState([]);
+  const [userData, setUserData] = useState({
+    user: "",
+    userFirst: "",
+    userLast: ""
+  });
   const navigate = useNavigate();
 
   // Get all blogs
@@ -24,9 +30,19 @@ export default function UserPage() {
       const blogs = await response.json();
       setReportArray(blogs);
     }
+    const authData = getUserData();
+    authData.then(function(result) {
+      if (result) {
+        setUserData({
+          user: result.user, 
+          userFirst: result.userFirst, 
+          userLast: result.userLast
+        });
+      }
+    });
     getBlogs();
     return;
-  }, [reportArray.length]);
+  }, [reportArray.length, Object.keys(userData).length]);
   
   async function uploadBlog(blog) {
     const newBlog = blog;
@@ -44,13 +60,13 @@ export default function UserPage() {
     let currentTime = date.toLocaleTimeString();
     let myForm = document.getElementById("myForm")
     let formData = new FormData(myForm);
-    formData.append("authorF", user.nameF);
-    formData.append("authorL", user.nameL);
+    formData.append("authorF", userData.userFirst);
+    formData.append("authorL", userData.userLast);
     formData.append("date", fulldate);
     formData.append("time", currentTime);
-    formData.append("authID", user.id);
+    formData.append("authID", userData.user);
     formData.append("location", location)
-    var blog_new = new Blog(formData.get("title"),user.nameL,user.nameF,formData.get("text"),fulldate,currentTime,2,location,formData.get("severity"),user.id);
+    var blog_new = new Blog(formData.get("title"),userData.userLast,userData.userFirst,formData.get("text"),fulldate,currentTime,2,location,formData.get("severity"),userData.user);
     //push to database\
     uploadBlog(blog_new);
     setReportArray([...reportArray, blog_new]);
@@ -67,7 +83,7 @@ export default function UserPage() {
   return (
     <div>
       <div className='UserInfo'>
-        <h1>{user.getnameF()} {user.getnameL()}</h1>
+        <h1>{userData.userFirst} {userData.userLast}</h1>
         {!reporting && <button onClick={() => newBlog()}>New Blog</button>}
       </div>
       <div className='search'>

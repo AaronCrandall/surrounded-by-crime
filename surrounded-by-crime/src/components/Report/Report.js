@@ -5,6 +5,7 @@ import ObjectID from 'bson-objectid';
 import Blog from '../../CustomClass/Blog'
 import Comment from '../../CustomClass/Comment'
 import User from '../../CustomClass/User'
+import getUserData from '../../authUser';
 
 export default function Report(blog) {
   var comments1 = [];
@@ -16,7 +17,12 @@ export default function Report(blog) {
   const [currentIndex, setCurrentIndex] = useState(null);
   const [commentToDisplay, setcommentToDisplay] = useState();
   const [commentingComment, setCommentingComment] = useState(false);
-  const user = new User("Aaron", "Crandall", 0, 123, 'acranda1@uncc.edu', 10);
+  const [userData, setUserData] = useState({
+    user: "",
+    userFirst: "",
+    userLast: ""
+  });
+  // const user = new User("Aaron", "Crandall", 0, 123, 'acranda1@uncc.edu', 10);
   const [currentBlog, setCurrentBlog] = useState(new Blog());
 
   useEffect(() => {
@@ -36,9 +42,19 @@ export default function Report(blog) {
       commentOrdering(new_blog.comments);
       setHookForComments(comments1);
     }
+    const authData = getUserData();
+    authData.then(function(result) {
+      if (result) {
+        setUserData({
+          user: result.user, 
+          userFirst: result.userFirst, 
+          userLast: result.userLast
+        });
+      }
+    });
     getBlog();
     return;
-  }, [params.reportid]);
+  }, [params.reportid, Object.keys(userData).length]);
 
   function setsupdisplay(data){
     
@@ -84,13 +100,21 @@ export default function Report(blog) {
     let myForm = document.getElementById("myForm")
     let formData = new FormData(myForm);
 
-    formData.append("authorF", user.nameF);
-    formData.append("authorL", user.nameL);
+    formData.append("authorF", userData.userFirst);
+    formData.append("authorL", userData.userLast);
     formData.append("date", fulldate);
     formData.append("time", currentTime);
-    formData.append("authID", user.id);
+    formData.append("authID", userData.user);
 
-    var comment_add = new Comment(formData.get("text"),4,user.nameF,user.nameL,fulldate,currentTime,user.id);
+    var comment_add = new Comment(
+      formData.get("text"),
+      4,
+      userData.userFirst,
+      userData.userLast,
+      fulldate,
+      currentTime,
+      userData.user
+    );
 
     if (currentIndex !== null) {
       let commentToUpdate = hookforcommments[currentIndex];
