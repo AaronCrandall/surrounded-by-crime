@@ -21,12 +21,18 @@ export default function LogIn() {
         e.preventDefault();
         try {
             const login = { ...loginForm };
-            const response = await fetch("http://localhost:5050/crime/login-user", {
+            await fetch("http://localhost:5050/crime/login-user", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(login)}
-        )
-        } 
+            )
+            .then((res) => res.json())
+            .then((data) => {
+                localStorage.setItem('jwt-token', data.token);
+            })
+        } catch(err) {
+            console.log(err);
+        }
         finally {
             navigate('/');
         }

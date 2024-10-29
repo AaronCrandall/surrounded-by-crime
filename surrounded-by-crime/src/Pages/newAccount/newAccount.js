@@ -18,16 +18,17 @@ export default function NewAccount() {
         setUserForm(userForm);
     }
 
-    async function testingSession() {
-        const response = await fetch(`http://localhost:5050/crime/`);
-        if (!response.ok) {
-            const message = `An error occurred: ${response.statusText}`;
-            console.error(message);
-            return;
-        }
-    }
+    // async function testingSession() {
+    //     const response = await fetch(`http://localhost:5050/crime/`, {credentials: 'include'});
+    //     if (!response.ok) {
+    //         console.log(response);
+    //         const message = `An error occurred: ${response.statusText}`;
+    //         console.error(message);
+    //         return;
+    //     }
+    // }
 
-    testingSession();
+    // testingSession();
 
     async function registerUser(e) {
         e.preventDefault();
