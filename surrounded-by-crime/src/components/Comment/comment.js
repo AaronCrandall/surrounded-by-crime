@@ -6,9 +6,7 @@ const CommentShow = (props) => {
     comment1 = props
     return ( 
         <div>
-            <h2>{comment1.authorF} {comment1.autherL}</h2>
-            <h4>{comment1.date} {comment1.time}</h4>
-            <p>{comment1.text}</p>
+           
         </div>
     );
 }
