@@ -93,6 +93,10 @@ export default function Report(blog) {
     }
   }
 
+  async function testFilter() {
+    
+  }
+
   function makeComment(owner){
     const date = new Date();
     let fulldate = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
@@ -137,6 +141,7 @@ export default function Report(blog) {
   //setsupdisplay(blog1.comments);
   return (
     <div class='report'>
+      <button>Test filter</button>
       <div class='container'>
         <div class="post">
           <h1>{currentBlog.title}</h1>

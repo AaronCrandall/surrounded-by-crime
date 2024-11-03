@@ -30,7 +30,33 @@ router.get("/blog/:id", async (req, res) => {
   else {
     res.send(result).status(200);
   }
-  });
+});
+
+// Get a set of time filtered blogs
+router.get("/blog-time-filter", async (req, res) => {
+  let collection = await db.collection("blogs");
+
+  let startTime = req.body.startTime;
+  let endTime = req.body.endTime;
+  let startDate = req.body.startDate;
+  let endDate = req.body.endDate;
+
+  const filter = {
+    $and: [
+      { time: { $gt: startTime }},
+      { time: { $lt: endTime }},
+      { date: { $gt: startDate }},
+      { date: { $gt: startDate }}
+    ]
+  }
+
+  const results = await collection.find(filter);
+  if (results) {
+    res.send(results).status(200);
+  } else {
+    res.send("Filtered data not found").status(403);
+  }
+})
 
 // Register new user
 router.post("/", async (req, res) => {
