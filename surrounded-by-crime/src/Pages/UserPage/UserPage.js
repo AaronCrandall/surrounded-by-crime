@@ -83,8 +83,10 @@ export default function UserPage() {
   return (
     <div>
       <div className='UserInfo'>
-        <h1>{userData.userFirst} {userData.userLast}</h1>
-        {!reporting && <button onClick={() => newBlog()}>New Blog</button>}
+        <h1 class="h1">{userData.userFirst} {userData.userLast}</h1>
+        <div class="btn2 inputBox">
+        {!reporting && <input onClick={() => newBlog()}type="submit" name="newBlog" id ="newBlog" value="New Blog"></input>}
+        </div>
       </div>
       <div className='search'>
         {/* move the searchbar here*/}
@@ -97,15 +99,25 @@ export default function UserPage() {
       </div>}
       {reporting && 
       <div>
-        <h2>New Comment</h2>
+        <div class='container'>
+        <div class="post">
           <form id="myForm" action='#' method = 'POST'>
+          <h2 class="h1">New Report</h2>
             <div className="inputBox">
               <input type="text" name="title" id="title" placeholder="Title" required></input>
+            </div>
+            <div className="inputBox">
               <input type="text" name="text" id="text" placeholder="Report" required></input>
+            </div>
+            <div className="inputBox">
               <input type="number" name="severity" min="1" max="5" id="severity" placeholder="Severity 1-5" required></input>
             </div>
+            <div class="btn2 inputBox">
+              <input onClick={() => (makeReport())} type="submit" name="SubmitBlog" id ="SubmitBlog" value="Submit"></input>
+            </div>
           </form>
-          <button onClick={() => (makeReport())}>Submit</button>
+          </div>
+          </div>
       </div>}
     </div>
   )

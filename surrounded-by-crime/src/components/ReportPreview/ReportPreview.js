@@ -10,13 +10,19 @@ export default function ReportPreview(prop) {
     navigate(`/report/${id}`);
   }
   return (
-    <div>
-      <h2>{blog.title}</h2>
-      <h3>{blog.authorF} {blog.authorL}</h3>
-      <h4>{blog.date} {blog.time}</h4>
-      <h5>{blog.location}</h5>
-      <h6>{blog.severity}</h6>
-      <button onClick={()=> redirect(blog._id)}>Go To Report</button>
+    <div class='container'>
+    <div class="post">
+      <h1>{blog.title}</h1>
+      <div class="post__user">
+        <strong class="post__username">{blog.authorF} {blog.authorL}</strong>
+        <span class="post__date"> {blog.date} {blog.time}</span>
+        <h6>Severity: {blog.severity}</h6>
+     </div>
+      <div class="post__body">{blog.text}</div>
+        <div>
+          <button class="commentButton" onClick={()=> redirect(blog._id)}>Go To Report</button>
+        </div>
     </div>
+  </div>
   )
 }

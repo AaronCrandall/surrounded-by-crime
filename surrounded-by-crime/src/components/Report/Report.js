@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from "react-router-dom";
 import CommentShow from '../Comment/comment'
-import ObjectID from 'bson-objectid';
 import Blog from '../../CustomClass/Blog'
 import Comment from '../../CustomClass/Comment'
 import User from '../../CustomClass/User'
@@ -129,6 +128,7 @@ export default function Report(blog) {
       setCurrentIndex(null);
       setCommentingComment(false);
       setCommenting(false);
+      history.go()
     } else {
       owner.addComment(comment_add);
       updateComments(owner);
@@ -151,43 +151,59 @@ export default function Report(blog) {
             <h6>Severity: {currentBlog.severity}</h6>
            </div>
           <div class="post__body">{currentBlog.text}</div>
+          {!commenting && !commentingComment &&
+            <div>
+              <button class="commentButton" onClick={() => setCommenting(true)}>New Comment</button>
+            </div>}
         </div>
         </div>
-      {!commenting && !commentingComment &&
-      <div>
-        <button onClick={() => setCommenting(true)}>New Comment</button>
-      </div>}
+      
       {commenting &&
       <div>
-        <h2>New Comment</h2>
-          <form id="myForm" action='#' method = 'POST'>
+          <form class="commentBox" id="myForm" action='' method = 'POST'>
+          <h2 class="h1">New Comment</h2>
             <div className="inputBox">
               <input type="text" name="text" id="text" placeholder="Comment" required></input>
             </div>
+          <button class="submit" onClick={() => (makeComment(currentBlog))}>Submit</button>
           </form>
-          <button onClick={() => (makeComment(currentBlog))}>Submit</button>
       </div>}
       {!commenting && !commentingComment &&
       <div className='comments'>
         {hookforcommments.map((data, index) => {
           return(
-            <div className='individual_comment'>
-              <CommentShow key={index} {...data}/>
-              <button onClick={()=> displayWhileCommenting(index)}>New Comment</button>
-            </div>
+            (
+              <div class="dialogbox">
+                <CommentShow key={index} {...data}/>
+                <div class="body">
+                  <span class="tip tip-up"></span>
+                  <div class="message">
+                     <strong class="name">{data.authorF} {data.authorL}</strong>
+                      <span class="post__date"> {data.date} {data.time}</span>
+                      <div>
+                        {data.text}
+                      </div>
+                      <div class="a">
+                      <form>
+                        <button onClick={()=> displayWhileCommenting(index)} class='replyButton'>Reply</button>
+                      </form>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            )
           )
         })}
       </div>}
       {!commenting && commentingComment && 
       <div>
-        <CommentShow {...commentToDisplay}/>
-        <h2>New Comment</h2>
-          <form id="myForm" action='#' method = 'POST'>
+          <form class="commentBox" id="myForm" action='' method = 'POST'>
+          <h2 class="h1">Reply to a Comment</h2>
             <div className="inputBox">
               <input type="text" name="text" id="text" placeholder="Comment" required></input>
             </div>
+            <button onClick={() => (makeComment(commentToDisplay))} class="submit">Submit</button>
           </form>
-          <button onClick={() => (makeComment(commentToDisplay))}>Submit</button>
       </div>}
     </div>
   )
