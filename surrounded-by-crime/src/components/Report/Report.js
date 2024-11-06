@@ -5,6 +5,7 @@ import Blog from '../../CustomClass/Blog'
 import Comment from '../../CustomClass/Comment'
 import User from '../../CustomClass/User'
 import getUserData from '../../authUser';
+import getUserLatLong from '../../getCoords';
 
 export default function Report(blog) {
   var comments1 = [];
@@ -19,7 +20,8 @@ export default function Report(blog) {
   const [userData, setUserData] = useState({
     user: "",
     userFirst: "",
-    userLast: ""
+    userLast: "",
+    userCoords: {}
   });
   // const user = new User("Aaron", "Crandall", 0, 123, 'acranda1@uncc.edu', 10);
   const [currentBlog, setCurrentBlog] = useState(new Blog());

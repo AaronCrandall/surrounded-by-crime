@@ -4,6 +4,7 @@ import ReportPreview from '../../components/ReportPreview/ReportPreview'
 import Blog from '../../CustomClass/Blog'
 import User from '../../CustomClass/User'
 import getUserData from '../../authUser';
+import getUserLatLong from '../../getCoords';
 
 //make a list of reports than give each report its own report preview
 export default function UserPage() {
@@ -54,7 +55,7 @@ export default function UserPage() {
   };
 
   function makeReport(){
-    var location = 0; //need to find out how to get location
+    // var location = 0; //need to find out how to get location
     const date = new Date();
     let fulldate = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
     let currentTime = date.toLocaleTimeString();
@@ -65,11 +66,21 @@ export default function UserPage() {
     formData.append("date", fulldate);
     formData.append("time", currentTime);
     formData.append("authID", userData.user);
-    formData.append("location", location)
-    var blog_new = new Blog(formData.get("title"),userData.userLast,userData.userFirst,formData.get("text"),fulldate,currentTime,2,location,formData.get("severity"),userData.user);
-    //push to database\
-    uploadBlog(blog_new);
-    setReportArray([...reportArray, blog_new]);
+    // formData.append("location", location)
+
+    let coordinates = {};
+    const coordData = getUserLatLong();
+    coordData.then(function(result) {
+      if (result) {
+        console.log(result);
+        var blog_new = new Blog(formData.get("title"),userData.userLast,userData.userFirst,formData.get("text"),fulldate,currentTime,2,{latitude: result.lat, longitude: result.long},formData.get("severity"),userData.user);
+        console.log(blog_new);
+        //push to database\
+        uploadBlog(blog_new);
+        setReportArray([...reportArray, blog_new]);
+      }
+    });
+    
     setReporting(false);
   }
 
