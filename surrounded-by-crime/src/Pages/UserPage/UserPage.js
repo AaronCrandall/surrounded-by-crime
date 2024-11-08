@@ -8,14 +8,15 @@ import getUserLatLong from '../../getCoords';
 
 //make a list of reports than give each report its own report preview
 export default function UserPage() {
+  const [preferences, setPreferences] = useState(false);
   const [reporting, setReporting] = useState(false);
-  // var user = new User("Aaron", "Crandall", 0, 123, "acranda1@uncc.edu")
-  // const [reportArray, setReportArray] = useState([blog1, blog2]);
   const [reportArray, setReportArray] = useState([]);
   const [userData, setUserData] = useState({
     user: "",
     userFirst: "",
-    userLast: ""
+    userLast: "",
+    distance: "",//adding distance preference and time preference to our user data
+    time: ""
   });
   const navigate = useNavigate();
 
@@ -38,6 +39,9 @@ export default function UserPage() {
           user: result.user, 
           userFirst: result.userFirst, 
           userLast: result.userLast
+          //distpref: result.distpref,
+          //timepref: result.timepref
+          //I need to be able to grab the preferences
         });
       }
     });
@@ -87,49 +91,66 @@ export default function UserPage() {
   function newBlog(){
     setReporting(true);
   }
-
-  //blog = code to fill blog in from database, gets blogs relevant to the user based on preferences
-  //user = code to get user data
+  //need to be able to grab the preferences from the drop down menus
+  function settingPreferences(){
+    setPreferences(false);
+    //let timepref = dropdown
+    //let distpref = dropdown
+    //update server with new distance and time preferences. 
+  }
 
   return (
     <div>
-      <div className='UserInfo'>
-        <h1 class="h1">{userData.userFirst} {userData.userLast}</h1>
-        <div class="btn2 inputBox">
-        {!reporting && <input onClick={() => newBlog()}type="submit" name="newBlog" id ="newBlog" value="New Blog"></input>}
-        </div>
-      </div>
-      <div className='search'>
-        {/* move the searchbar here*/}
-      </div>
-      {!reporting && <div className='ReportPreviews'>
-        {/*make the report previews buttons to go to the report*/}
-        {reportArray.map((data, index) => { return (
-          <ReportPreview key={index} {...data}/>
-        );})}
+    {preferences && <div>
+      <h1>please select your preferred distance</h1>
+      {/*drop down bar goes here for distance preferences in miles, options like 5,10,25,100??  */}
+      <h1>Please select how old you would like the posts to be</h1>
+      {/*drop down bar goes here for distance preferences in miles, options like 5,10,25,100??  */}
+      <button onClick={()=> settingPreferences()}>submit</button>
       </div>}
-      {reporting && 
+
+    {!preferences && <div>
       <div>
-        <div class='container'>
-        <div class="post">
-          <form id="myForm" action='#' method = 'POST'>
-          <h2 class="h1">New Report</h2>
-            <div className="inputBox">
-              <input type="text" name="title" id="title" placeholder="Title" required></input>
-            </div>
-            <div className="inputBox">
-              <input type="text" name="text" id="text" placeholder="Report" required></input>
-            </div>
-            <div className="inputBox">
-              <input type="number" name="severity" min="1" max="5" id="severity" placeholder="Severity 1-5" required></input>
-            </div>
-            <div class="btn2 inputBox">
-              <input onClick={() => (makeReport())} type="submit" name="SubmitBlog" id ="SubmitBlog" value="Submit"></input>
-            </div>
-          </form>
+        <div className='UserInfo'>
+          <h1 class="h1">{userData.userFirst} {userData.userLast}</h1>
+          <div class="btn2 inputBox">
+          {!reporting && <input onClick={() => newBlog()}type="submit" name="newBlog" id ="newBlog" value="New Blog"></input>}
           </div>
-          </div>
-      </div>}
+        </div>
+        <button onClick={()=> setPreferences(true)}>Set Preferences</button>{/*This is the button to be able to adjust preferences*/}
+        <div className='search'>
+          {/* move the searchbar here*/}
+        </div>
+        {!reporting && <div className='ReportPreviews'>
+          {/*make the report previews buttons to go to the report*/}
+          {reportArray.map((data, index) => { return (
+            <ReportPreview key={index} {...data}/>
+          );})}
+        </div>}
+        {reporting && 
+        <div>
+          <div class='container'>
+          <div class="post">
+            <form id="myForm" action='#' method = 'POST'>
+            <h2 class="h1">New Report</h2>
+              <div className="inputBox">
+                <input type="text" name="title" id="title" placeholder="Title" required></input>
+              </div>
+              <div className="inputBox">
+                <input type="text" name="text" id="text" placeholder="Report" required></input>
+              </div>
+              <div className="inputBox">
+                <input type="number" name="severity" min="1" max="5" id="severity" placeholder="Severity 1-5" required></input>
+              </div>
+              <div class="btn2 inputBox">
+                <input onClick={() => (makeReport())} type="submit" name="SubmitBlog" id ="SubmitBlog" value="Submit"></input>
+              </div>
+            </form>
+            </div>
+            </div>
+        </div>}
+      </div>
+    </div>}
     </div>
   )
 }
