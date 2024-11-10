@@ -2,6 +2,7 @@ import express from "express";
 import db from "../db/connection.js";
 import jwt from 'jsonwebtoken';
 import { ObjectId } from "mongodb";
+import calculateDistance from "../calculateDistance.js";
 
 const router = express.Router();
 
@@ -12,10 +13,41 @@ router.get("/", async (req, res) => {
 });
 
 // Retrieve all blogs
-router.get("/all-blogs", async (req, res) => {
-let collection = await db.collection("blogs");
-let results = await collection.find({}).toArray();
-res.send(results).status(200);
+router.post("/all-blogs", async (req, res) => {
+  let collection = await db.collection("blogs");
+  let results = await collection.find({}).toArray();
+
+  if (req.body.preferences) {
+    let startTime = req.body.references.startTime;
+    let endTime = req.body.preferences.endTime;  
+    // let compareTime = new Date("2024-10-31T00:00:00.000Z");
+
+    let distFilteredReports = [];
+    
+    for (let result of results) {
+      let dtString = result.date + ":" + result.time;
+      let newDT = new Date(dtString);
+      if ((newDT > startTime) && (newDT < endTime)) {
+        distFilteredReports.push(result);
+      }
+    }
+
+    let distance = req.body.preferences.distance;
+    let location = req.body.preferences.location;
+    let locFilteredReports = [];
+
+    for (report in distFilteredReports) {
+      let reportLocation = report.location;
+      let distanceBetween = calculateDistance(location, reportLocation);
+      if (distanceBetween < distance) {
+        locFilteredReports.push(report);
+      }
+    }
+
+    res.send(locFilteredReports).status(200);
+  } else {
+    res.send(results).status(200);
+  }
 });
 
 // Get a specific blog

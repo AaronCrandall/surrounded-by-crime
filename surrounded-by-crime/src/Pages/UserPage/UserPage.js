@@ -14,16 +14,45 @@ export default function UserPage() {
   const [userData, setUserData] = useState({
     user: "",
     userFirst: "",
-    userLast: "",
-    distance: "",//adding distance preference and time preference to our user data
-    time: ""
+    userLast: "",//adding distance preference and time preference to our user data
   });
   const navigate = useNavigate();
 
   // Get all blogs
   useEffect(() => {
+    const authData = getUserData();
+    authData.then(function(result) {
+      if (result) {
+        if (result.preferences) {
+          setPreferences(true);
+          setUserData({
+            user: result.user, 
+            userFirst: result.userFirst, 
+            userLast: result.userLast,
+            preferences: {
+              distance: result.preferences.distance,
+              startTime: result.preferences.startTime,
+              endTime: result.preferences.endTime
+            }});
+        } else {
+          setUserData({
+            user: result.user, 
+            userFirst: result.userFirst, 
+            userLast: result.userLast
+            //distpref: result.distpref,
+            //timepref: result.timepref
+            //I need to be able to grab the preferences
+          });
+        }
+      }
+    });
     async function getBlogs() {
-      const response = await fetch(`http://localhost:5050/crime/all-blogs`);
+      let response = {};
+      if (userData.preferences) {
+        response = await fetch(`http://localhost:5050/crime/all-blogs`, {method: "POST", body: {preferences: userData.preferences}});
+      } else {
+        response = await fetch(`http://localhost:5050/crime/all-blogs`, {method: "POST"});
+      }
       if (!response.ok) {
         const message = `Error: ${response.statusText}`;
         console.error(message);
@@ -32,19 +61,6 @@ export default function UserPage() {
       const blogs = await response.json();
       setReportArray(blogs);
     }
-    const authData = getUserData();
-    authData.then(function(result) {
-      if (result) {
-        setUserData({
-          user: result.user, 
-          userFirst: result.userFirst, 
-          userLast: result.userLast
-          //distpref: result.distpref,
-          //timepref: result.timepref
-          //I need to be able to grab the preferences
-        });
-      }
-    });
     getBlogs();
     return;
   }, [reportArray.length, Object.keys(userData).length]);
@@ -76,9 +92,7 @@ export default function UserPage() {
     const coordData = getUserLatLong();
     coordData.then(function(result) {
       if (result) {
-        console.log(result);
         var blog_new = new Blog(formData.get("title"),userData.userLast,userData.userFirst,formData.get("text"),fulldate,currentTime,2,{latitude: result.lat, longitude: result.long},formData.get("severity"),userData.user);
-        console.log(blog_new);
         //push to database\
         uploadBlog(blog_new);
         setReportArray([...reportArray, blog_new]);
