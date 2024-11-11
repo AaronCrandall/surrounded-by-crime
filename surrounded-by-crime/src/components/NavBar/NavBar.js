@@ -42,7 +42,8 @@ export default function NavBar(){
           <a><Link to="login">Login Here</Link></a>
           }
           { userData.user && 
-          <button onClick={() => (logOutUser())}>Log Out</button>
+          //<button onClick={() => (logOutUser())}>Log Out</button>
+          <a><Link to="/" onClick={() => (logOutUser())}>Log Out</Link></a>
           }
           <div className="search-container">
             <form action="/">
