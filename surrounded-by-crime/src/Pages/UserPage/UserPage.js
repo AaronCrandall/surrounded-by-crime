@@ -116,11 +116,31 @@ export default function UserPage() {
   return (
     <div>
     {preferences && <div>
-      <h1>please select your preferred distance</h1>
-      {/*drop down bar goes here for distance preferences in miles, options like 5,10,25,100??  */}
-      <h1>Please select how old you would like the posts to be</h1>
-      {/*drop down bar goes here for distance preferences in miles, options like 5,10,25,100??  */}
-      <button onClick={()=> settingPreferences()}>submit</button>
+      <h1 class="h1"> Please, select your preferred distance:</h1>
+      {/*drop down bar goes here for distance preferences in miles, options like 5,10,25,100??  */
+      <div class="dropdown">
+        <select class="option" id="distance">
+          <option value="5">5 miles</option>
+          <option value="10">10 miles</option>
+          <option value="25">25 miles</option>
+          <option value="100">100 miles</option>
+        </select>
+      </div>
+      }
+      <h1 class="h1">Please, select how old you would like the posts to be:</h1>
+      {/*drop down bar goes here for distance preferences in miles, options like 5,10,25,100??  */
+      <div class="dropdown">
+      <select class="option" id="date">
+        <option value="1hour">1 hour</option>
+        <option value="10hours">10 hours</option>
+        <option value="1day">1 day</option>
+        <option value="1week">1 week</option>
+      </select>
+    </div>
+      }
+      <div class="btn2 inputBox">
+        <input onClick={()=> settingPreferences()} type="submit" name="setPreferences" id ="setPreferences" value="Submit"></input>
+      </div>
       </div>}
 
     {!preferences && <div>

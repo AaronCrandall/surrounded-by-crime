@@ -27,31 +27,32 @@ export default function NavBar(){
   }
 
   return (
-      <header>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
-      <div className='header'>
-        <a className="logo"><Link to="/"><img src='logoTransparent.png' alt="logo"></img></Link></a>
-        <div className='header-right'>
-          { userData.user && 
-          <a><Link to= '/user/{user.id}'>{userData.userFirst}'s page</Link> </a>
-          }
-          { !userData.user && 
-          <a><Link to="/newaccount">Create New Account</Link></a>
-          }
-          { !userData.user && 
-          <a><Link to="login">Login Here</Link></a>
-          }
-          { userData.user && 
-          <button onClick={() => (logOutUser())}>Log Out</button>
-          }
-          <div className="search-container">
-            <form action="/">
-              <input type="text" placeholder="Search.." name="search"></input>
-              <button type="submit"><i className="fa fa-search"></i></button>
-            </form>
-          </div>
-        </div>
+    <header>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
+    <div className='header'>
+    <a className="logo"><Link to="/"><img src='logoTransparent.png' alt="logo"></img></Link></a>
+    <div className='header-right'>
+      { userData.user && 
+      <a><Link to= '/user/{user.id}'>{userData.userFirst}'s page</Link> </a>
+      }
+      { !userData.user && 
+      <a><Link to="/newaccount">Create New Account</Link></a>
+      }
+      { !userData.user && 
+      <a><Link to="login">Login Here</Link></a>
+      }
+      { userData.user && 
+      //<button onClick={() => (logOutUser())}>Log Out</button>
+      <a><Link to="/" onClick={() => (logOutUser())}>Log Out</Link></a>
+      }
+      <div className="search-container">
+        <form action="/">
+          <input type="text" placeholder="Search.." name="search"></input>
+          <button type="submit"><i className="fa fa-search"></i></button>
+        </form>
       </div>
-    </header>
+    </div>
+  </div>
+</header>
   );
 }
