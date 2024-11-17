@@ -19,9 +19,7 @@ export default function UserPage() {
   const [userData, setUserData] = useState({
     user: "",
     userFirst: "",
-    userLast: "",
-    distance: "",//adding distance preference and time preference to our user data
-    time: ""
+    userLast: "",//adding distance preference and time preference to our user data
   });
   const navigate = useNavigate();
 
@@ -182,9 +180,7 @@ export default function UserPage() {
           {!reporting && <input onClick={() => newBlog()}type="submit" name="newBlog" id ="newBlog" value="New Blog"></input>}
           </div>
         </div>
-        <div class="btn22 inputBox">
-          <input onClick={()=> setPreferences(true)} type="submit" name="preferences" id ="preferences" value="Set Preferences"></input>{/*This is the button to be able to adjust preferences*/}
-        </div>
+        <button onClick={()=> setPreferences(true)}>Set Preferences</button>{/*This is the button to be able to adjust preferences*/}
         <div className='search'>
           {/* move the searchbar here*/}
         </div>
