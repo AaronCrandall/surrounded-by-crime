@@ -2,6 +2,7 @@ import express from "express";
 import db from "../db/connection.js";
 import jwt from 'jsonwebtoken';
 import { ObjectId } from "mongodb";
+import calculateDistance from "../calculateDistance.js";
 
 const router = express.Router();
 
@@ -12,10 +13,44 @@ router.get("/", async (req, res) => {
 });
 
 // Retrieve all blogs
-router.get("/all-blogs", async (req, res) => {
-let collection = await db.collection("blogs");
-let results = await collection.find({}).toArray();
-res.send(results).status(200);
+router.post("/all-blogs", async (req, res) => {
+  let collection = await db.collection("blogs");
+  let results = await collection.find({}).toArray();
+
+  if (req.body.time) {
+    let preferences = {
+      time: parseInt(req.body.time),
+      distance: parseInt(req.body.distance),
+      location: req.body.location
+    };
+    let now = new Date(Date.now());
+    now.setHours(now.getHours() - 5 - preferences.time);
+    let timeFilter = now;
+
+    let timeFilteredReports = [];
+
+    for (let result of results) {
+      let dtString = result.date + ":" + result.time;
+      let resultDT = new Date(dtString);
+      if (resultDT > timeFilter) {
+        timeFilteredReports.push(result);
+      }
+    }
+
+    let distFilteredReports = [];
+
+    for (let report of timeFilteredReports) {
+      let reportLocation = report.location;
+      let distanceBetween = calculateDistance(preferences.location, reportLocation);
+      if (distanceBetween < preferences.distance) {
+        distFilteredReports.push(report);
+      }
+    }
+
+    res.send(distFilteredReports).status(200);
+  } else {
+    res.send(results).status(200);
+  }
 });
 
 // Get a specific blog
@@ -31,6 +66,33 @@ router.get("/blog/:id", async (req, res) => {
     res.send(result).status(200);
   }
 });
+
+//Adding preferences to token
+router.post("/add-preferences", async (req, res) => {
+  const jwtSecret = process.env.JWT_SECRET;
+  const token = req.headers['jwt-token'];
+  const preferences = req.body;
+  try {
+    const decoded = jwt.verify(token, jwtSecret);
+    if (decoded) {
+      let newUserData = {
+        user: decoded.user,
+        userFirst: decoded.userFirst,
+        userLast: decoded.userLast,
+        time: preferences.time,
+        distance: preferences.distance,
+        location: preferences.location
+      }
+      const newToken = jwt.sign(newUserData, jwtSecret);
+
+      return res.status(200).json({message: "Preferences added", newToken});
+    } else {
+      return res.status(401).json({message: 'Error authenticating'});
+    }
+  } catch (error) {
+    return res.status(401).json({message: 'Error'});
+  }
+})
 
 // Get a set of time filtered blogs
 router.get("/blog-time-filter", async (req, res) => {
@@ -107,11 +169,22 @@ router.post("/auth-user", async (req, res) => {
   try {
     const decoded = jwt.verify(token, jwtSecret);
     if (decoded) {
-      return res.status(200).json({
-        user: decoded.user,
-        userFirst: decoded.userFirst,
-        userLast: decoded.userLast
-      });
+      if (decoded.time) {
+        return res.status(200).json({
+          user: decoded.user,
+          userFirst: decoded.userFirst,
+          userLast: decoded.userLast,
+          distance: decoded.distance,
+          time: decoded.time,
+          location: decoded.location
+        });
+      } else {
+        return res.status(200).json({
+          user: decoded.user,
+          userFirst: decoded.userFirst,
+          userLast: decoded.userLast
+        });
+      }
     } else {
       return res.status(401).json({message: 'Error authenticating'});
     }

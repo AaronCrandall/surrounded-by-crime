@@ -3,15 +3,14 @@ async function getUserLatLong() {
     const API_KEY = "71d4bae10351465887eba1f166f1db9c";
     let userIp = "";
     let userCoords = {
-        lat: "",
-        long: ""
+        latitude: "",
+        longitude: ""
     }
 
     await fetch("https://api.ipify.org?format=json", {mode: 'cors', method: "GET"})
         .then(response => response.json())
         .then(data => {
             userIp = data.ip;
-            console.log(userIp);
         })
         .catch(error => {
             console.error("Error fetching IP address:", error);
@@ -25,8 +24,8 @@ async function getUserLatLong() {
         return response.json();
         })
         .then(data => {
-            userCoords.lat = data.latitude;
-            userCoords.long = data.longitude;
+            userCoords.latitude = data.latitude;
+            userCoords.longitude = data.longitude;
         })
         .catch(error => {
             console.error('Error:', error);
