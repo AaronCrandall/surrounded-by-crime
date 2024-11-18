@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import getUserData from '../../authUser';
 
 export default function NavBar(){
+  const navigate = useNavigate();
   const [userData, setUserData] = useState({
     user: "",
     userFirst: "",
     userLast: ""
   });
-
+  const [userName, setUserName] = useState('')
   useEffect(() => {
     const authData = getUserData();
     authData.then(function(result) {
@@ -33,7 +34,7 @@ export default function NavBar(){
     <a className="logo"><Link to="/"><img src='logoTransparent.png' alt="logo"></img></Link></a>
     <div className='header-right'>
       { userData.user && 
-      <a><Link to= '/user/{userData.id}'>{userData.userFirst}'s page</Link> </a>
+      <a><Link to= '/user/1'>{userData.userFirst}'s page</Link> </a>
       }
       { !userData.user && 
       <a><Link to="/newaccount">Create New Account</Link></a>

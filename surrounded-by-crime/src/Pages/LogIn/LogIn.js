@@ -1,6 +1,7 @@
 import { React, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import getUserData from '../../authUser';
 //forms and backend checking for logging in
 
 export default function LogIn() {
@@ -8,6 +9,11 @@ export default function LogIn() {
         email: "",
         password: ""
     });
+    const [userData, setUserData] = useState({
+        user: "",
+        userFirst: "",
+        userLast: ""
+      });
     const navigate = useNavigate();
 
     function updateLoginForm(newInfo) {
@@ -18,6 +24,7 @@ export default function LogIn() {
     }
 
     async function loginUser(e) {
+        let success = false;
         e.preventDefault();
         try {
             const login = { ...loginForm };
@@ -26,9 +33,16 @@ export default function LogIn() {
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(login)}
         )
-        } 
+        .then((res) => res.json())
+        .then((data) => {
+            localStorage.setItem('jwt-token', data.token);
+            success = true;
+        })
+        } catch(err){
+            console.log(err);
+        }
         finally {
-            navigate('/');
+            navigate('/user/1');
         }
     };
 
