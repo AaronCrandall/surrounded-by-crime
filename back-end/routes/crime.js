@@ -158,7 +158,7 @@ try {
     res.status(403).send("Incorrect login info");
   }
 } catch {
-  res.status(500).send("Error uploading user datat");
+  res.status(500).send("Error uploading user data");
 }
 });
 

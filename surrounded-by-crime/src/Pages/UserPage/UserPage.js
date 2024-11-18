@@ -9,6 +9,8 @@ import getUserLatLong from '../../getCoords';
 
 //make a list of reports than give each report its own report preview
 export default function UserPage() {
+  const [isfiltered, setIsFiltered] = useState(false);
+  const [filteredArray, setFilteredArray] = useState([]);
   const [preferences, setPreferences] = useState(false);
   const [filters, setFilters] = useState({
     distance: "5",
@@ -25,6 +27,7 @@ export default function UserPage() {
 
   // Get all blogs
   useEffect(() => {
+    async function searchFilter(){}
     async function getBlogs() {
       if (userData.time) {
         const response = await fetch(`http://localhost:5050/crime/all-blogs`, {
@@ -141,6 +144,31 @@ export default function UserPage() {
     //let distpref = dropdown
     //update server with new distance and time preferences.
   }
+  //Filters through the reports based on what is typed in the search bar at the time of clicking the button
+  function searchFilter(){
+    const inputElement = document.getElementById("search");
+    let count = 0;
+    let text = inputElement.value;
+    text = text.toUpperCase();
+    const results = [];
+    for(let i = 0; i < reportArray.length; i++){
+      let string = reportArray[i].title.toUpperCase();
+      let array = string.split("")
+      for(let j = 0; j < text.length; j++){
+        if(array[j] === text[j]){
+          count++;
+        }
+      }
+      if(count === text.length){
+        results.push(reportArray[i]);
+      }
+      count = 0;
+    }
+    setFilteredArray(results);
+    setIsFiltered(true);
+  }
+
+
 
   return (
     <div>
@@ -180,13 +208,22 @@ export default function UserPage() {
           {!reporting && <input onClick={() => newBlog()}type="submit" name="newBlog" id ="newBlog" value="New Blog"></input>}
           </div>
         </div>
-        <button onClick={()=> setPreferences(true)}>Set Preferences</button>{/*This is the button to be able to adjust preferences*/}
+        <button onClick={()=> setPreferences(true)}>Set Preferences</button>
         <div className='search'>
-          {/* move the searchbar here*/}
+          <form>
+            <input id="search" type="text" placeholder="Search.." name="search"></input>
+            <button type="button" onClick={() => searchFilter()}><i className="fa fa-search"></i></button>
+          </form>
         </div>
-        {!reporting && <div className='ReportPreviews'>
+        {!reporting && !isfiltered && <div className='ReportPreviews'>
           {/*make the report previews buttons to go to the report*/}
           {reportArray.map((data, index) => { return (
+            <ReportPreview key={index} {...data}/>
+          );})}
+        </div>}
+        {!reporting && isfiltered && <div className='ReportPreviews'>
+          {/*make the report previews buttons to go to the report*/}
+          {filteredArray.map((data, index) => { return (
             <ReportPreview key={index} {...data}/>
           );})}
         </div>}

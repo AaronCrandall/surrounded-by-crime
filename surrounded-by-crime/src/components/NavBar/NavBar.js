@@ -33,7 +33,7 @@ export default function NavBar(){
     <a className="logo"><Link to="/"><img src='logoTransparent.png' alt="logo"></img></Link></a>
     <div className='header-right'>
       { userData.user && 
-      <a><Link to= '/user/{user.id}'>{userData.userFirst}'s page</Link> </a>
+      <a><Link to= '/user/{userData.id}'>{userData.userFirst}'s page</Link> </a>
       }
       { !userData.user && 
       <a><Link to="/newaccount">Create New Account</Link></a>
@@ -44,13 +44,7 @@ export default function NavBar(){
       { userData.user && 
       //<button onClick={() => (logOutUser())}>Log Out</button>
       <a><Link to="/" onClick={() => (logOutUser())}>Log Out</Link></a>
-      }
-      <div className="search-container">
-        <form action="/">
-          <input type="text" placeholder="Search.." name="search"></input>
-          <button type="submit"><i className="fa fa-search"></i></button>
-        </form>
-      </div>
+      }  
     </div>
   </div>
 </header>
