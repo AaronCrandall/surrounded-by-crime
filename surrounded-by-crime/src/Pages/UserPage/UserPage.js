@@ -4,45 +4,75 @@ import ReportPreview from '../../components/ReportPreview/ReportPreview'
 import Blog from '../../CustomClass/Blog'
 import User from '../../CustomClass/User'
 import getUserData from '../../authUser';
+import addPreferences from '../../addPrefs';
 import getUserLatLong from '../../getCoords';
 
 //make a list of reports than give each report its own report preview
 export default function UserPage() {
   const [preferences, setPreferences] = useState(false);
+  const [filters, setFilters] = useState({
+    distance: "5",
+    time: "1"
+  });
   const [reporting, setReporting] = useState(false);
   const [reportArray, setReportArray] = useState([]);
   const [userData, setUserData] = useState({
     user: "",
     userFirst: "",
-    userLast: "",
-    distance: "",//adding distance preference and time preference to our user data
-    time: ""
+    userLast: "",//adding distance preference and time preference to our user data
   });
   const navigate = useNavigate();
 
   // Get all blogs
   useEffect(() => {
     async function getBlogs() {
-      const response = await fetch(`http://localhost:5050/crime/all-blogs`);
-      if (!response.ok) {
-        const message = `Error: ${response.statusText}`;
-        console.error(message);
-        return;
+      if (userData.time) {
+        const response = await fetch(`http://localhost:5050/crime/all-blogs`, {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({
+            time: userData.time,
+            distance: userData.distance,
+            location: userData.location
+          })
+        });
+        if (!response.ok) {
+          const message = `Error: ${response.statusText}`;
+          console.error(message);
+          return;
+        }
+        const blogs = await response.json();
+        setReportArray(blogs);
+      } else {
+        const response = await fetch(`http://localhost:5050/crime/all-blogs`, {method: "POST"});
+        if (!response.ok) {
+          const message = `Error: ${response.statusText}`;
+          console.error(message);
+          return;
+        }
+        const blogs = await response.json();
+        setReportArray(blogs);
       }
-      const blogs = await response.json();
-      setReportArray(blogs);
     }
     const authData = getUserData();
     authData.then(function(result) {
       if (result) {
-        setUserData({
-          user: result.user, 
-          userFirst: result.userFirst, 
-          userLast: result.userLast
-          //distpref: result.distpref,
-          //timepref: result.timepref
-          //I need to be able to grab the preferences
-        });
+        if (result.time) {
+          setUserData({
+            user: result.user, 
+            userFirst: result.userFirst, 
+            userLast: result.userLast,
+            distance: result.distance,
+            time: result.time,
+            location: result.location
+          });
+        } else {
+          setUserData({
+            user: result.user, 
+            userFirst: result.userFirst, 
+            userLast: result.userLast
+          });
+        }
       }
     });
     getBlogs();
@@ -76,9 +106,7 @@ export default function UserPage() {
     const coordData = getUserLatLong();
     coordData.then(function(result) {
       if (result) {
-        console.log(result);
-        var blog_new = new Blog(formData.get("title"),userData.userLast,userData.userFirst,formData.get("text"),fulldate,currentTime,2,{latitude: result.lat, longitude: result.long},formData.get("severity"),userData.user);
-        console.log(blog_new);
+        var blog_new = new Blog(formData.get("title"),userData.userLast,userData.userFirst,formData.get("text"),fulldate,currentTime,2,{latitude: result.latitude, longitude: result.longitude},formData.get("severity"),userData.user);
         //push to database\
         uploadBlog(blog_new);
         setReportArray([...reportArray, blog_new]);
@@ -91,12 +119,27 @@ export default function UserPage() {
   function newBlog(){
     setReporting(true);
   }
+
+  function updatePreferences(value) {
+    return setFilters((prev) => {
+      return {...prev, ...value};
+    });
+  }
+
   //need to be able to grab the preferences from the drop down menus
   function settingPreferences(){
+    const coordData = getUserLatLong();
+    coordData.then(function(result) {
+      if (result) {
+        // {latitude: result.lat, longitude: result.long}
+        //push to database\
+        addPreferences(filters, result);
+      }
+    });
     setPreferences(false);
     //let timepref = dropdown
     //let distpref = dropdown
-    //update server with new distance and time preferences. 
+    //update server with new distance and time preferences.
   }
 
   return (
@@ -105,7 +148,7 @@ export default function UserPage() {
       <h1 class="h1"> Please, select your preferred distance:</h1>
       {/*drop down bar goes here for distance preferences in miles, options like 5,10,25,100??  */
       <div class="dropdown">
-        <select class="option" id="distance">
+        <select class="option" id="distance" onChange={(e) => updatePreferences({distance: e.target.value})}>
           <option value="5">5 miles</option>
           <option value="10">10 miles</option>
           <option value="25">25 miles</option>
@@ -116,11 +159,11 @@ export default function UserPage() {
       <h1 class="h1">Please, select how old you would like the posts to be:</h1>
       {/*drop down bar goes here for distance preferences in miles, options like 5,10,25,100??  */
       <div class="dropdown">
-      <select class="option" id="date">
+      <select class="option" id="date" onChange={(e) => updatePreferences({time: e.target.value})}>
         <option value="1hour">1 hour</option>
-        <option value="10hours">10 hours</option>
-        <option value="1day">1 day</option>
-        <option value="1week">1 week</option>
+        <option value="10">10 hours</option>
+        <option value="24">1 day</option>
+        <option value="168">1 week</option>
       </select>
     </div>
       }
@@ -137,9 +180,7 @@ export default function UserPage() {
           {!reporting && <input onClick={() => newBlog()}type="submit" name="newBlog" id ="newBlog" value="New Blog"></input>}
           </div>
         </div>
-        <div class="btn22 inputBox">
-          <input onClick={()=> setPreferences(true)} type="submit" name="preferences" id ="preferences" value="Set Preferences"></input>{/*This is the button to be able to adjust preferences*/}
-        </div>
+        <button onClick={()=> setPreferences(true)}>Set Preferences</button>{/*This is the button to be able to adjust preferences*/}
         <div className='search'>
           {/* move the searchbar here*/}
         </div>
