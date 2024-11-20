@@ -1,0 +1,15 @@
+Surrounded-By-Crime
+Installation Guide
+
+-----In one terminal-----
+Run the following commands:
+cd back-end
+npm install
+npm start
+
+
+-----In a second terminal-----
+Run the following commands:
+cd surrounded-by-crime
+npm install
+npm start
