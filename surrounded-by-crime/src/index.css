@@ -537,3 +537,24 @@ font-size: 17px;
   font-size: large;
   font-weight: bold;
 }
+
+/*SEARCH BAR USER'S PAGE*/
+.search-container button {
+  padding: 6px 10px;
+  margin-right: 16px;
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
+
+.search-container input[type=text] {
+  padding: 6px;
+  font-size: 17px;
+  border: none;
+  align-items: center;
+}
+
+.search-container{
+  padding-top: 5px;
+}

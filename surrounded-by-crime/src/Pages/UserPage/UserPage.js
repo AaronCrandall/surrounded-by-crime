@@ -178,7 +178,7 @@ export default function UserPage() {
 
   return (
     <div>
-      {!refresh && <button onClick={refresher()}></button>}
+      {!refresh && <button onClick={refresher()} hidden></button>}
     {preferences && <div>
       <h1 class="h1"> Please, select your preferred distance:</h1>
       {/*drop down bar goes here for distance preferences in miles, options like 5,10,25,100??  */
@@ -215,8 +215,10 @@ export default function UserPage() {
           {!reporting && <input onClick={() => newBlog()}type="submit" name="newBlog" id ="newBlog" value="New Blog"></input>}
           </div>
         </div>
-        <button onClick={()=> setPreferences(true)}>Set Preferences</button>
-        <div className='search'>
+        <div class="btn22 inputBox">
+          <input onClick={()=> setPreferences(true)} type="submit" name="preferences" id ="preferences" value="Set Preferences"></input>{/*This is the button to be able to adjust preferences*/}
+        </div>
+        <div className='search-container'>
           <form>
             <input id="search" type="text" placeholder="Search.." name="search"></input>
             <button type="button" onClick={() => searchFilter()}><i className="fa fa-search"></i></button>

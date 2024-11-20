@@ -26,16 +26,12 @@ export default function NavBar(){
     localStorage.removeItem('jwt-token');
     setUserData([]);
   }
-  //updates the navbar on successful log in
-  async function loggedInUser(){
-    console.log("will this run?");
-  }
 
   return (
     <header>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
     <div className='header'>
-    <a className="logo"><Link to="/"><img src='logoTransparent.png' alt="logo"></img></Link></a>
+    <a className="logo"><Link to="/"><img src='/logoTransparent.png' alt="logo"></img></Link></a>
     <div className='header-right'>
       { userData.user && 
       <a><Link to= '/user/1'>{userData.userFirst}'s page</Link> </a>
