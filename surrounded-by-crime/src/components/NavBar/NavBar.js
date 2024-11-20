@@ -26,9 +26,9 @@ export default function NavBar(){
     localStorage.removeItem('jwt-token');
     setUserData([]);
   }
+  //updates the navbar on successful log in
   async function loggedInUser(){
-    let token = localStorage.getItem('jwt-token');
-    setUserData(token);
+    console.log("will this run?");
   }
 
   return (

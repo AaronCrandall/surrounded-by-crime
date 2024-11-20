@@ -9,6 +9,7 @@ import getUserLatLong from '../../getCoords';
 
 //make a list of reports than give each report its own report preview
 export default function UserPage() {
+  const [refresh, setRefresh] = useState(false);
   const [isfiltered, setIsFiltered] = useState(false);
   const [filteredArray, setFilteredArray] = useState([]);
   const [preferences, setPreferences] = useState(false);
@@ -27,7 +28,6 @@ export default function UserPage() {
 
   // Get all blogs
   useEffect(() => {
-    async function searchFilter(){}
     async function getBlogs() {
       if (userData.time) {
         const response = await fetch(`http://localhost:5050/crime/all-blogs`, {
@@ -90,7 +90,13 @@ export default function UserPage() {
     body: JSON.stringify(blog)}
     )
   };
-
+  function refresher(){
+    let y = localStorage.getItem("reload");
+    if(y == 1){
+      localStorage.setItem("reload", 2);
+      window.location.reload();
+    }
+  }
   function makeReport(){
     // var location = 0; //need to find out how to get location
     const date = new Date();
@@ -167,11 +173,12 @@ export default function UserPage() {
     setFilteredArray(results);
     setIsFiltered(true);
   }
-
+  //refresh();
 
 
   return (
     <div>
+      {!refresh && <button onClick={refresher()}></button>}
     {preferences && <div>
       <h1 class="h1"> Please, select your preferred distance:</h1>
       {/*drop down bar goes here for distance preferences in miles, options like 5,10,25,100??  */

@@ -2,6 +2,7 @@ import { React, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import getUserData from '../../authUser';
+import NavBar from '../../components/NavBar/NavBar';
 //forms and backend checking for logging in
 
 export default function LogIn() {
@@ -37,6 +38,7 @@ export default function LogIn() {
         .then((data) => {
             localStorage.setItem('jwt-token', data.token);
             success = true;
+            localStorage.setItem("reload" , 1);
         })
         } catch(err){
             console.log(err);
